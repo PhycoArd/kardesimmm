@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mine'ye Özel 💜</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #f4a7c3;
+      --rose: #e87ea1;
+      --purple: #9b59b6;
+      --deep-purple: #6c3483;
+      --light: #fdf0f7;
+      --card-bg: rgba(255,255,255,0.7);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 40%, #ede7f6 100%);
+      font-family: 'Lato', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* floating petals */
+    .petals {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -40px;
+      font-size: 1.4rem;
+      animation: fall linear infinite;
+      opacity: 0.6;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 70px 20px 40px;
+    }
+    header .subtitle {
+      font-size: 0.9rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      color: var(--deep-purple);
+      line-height: 1.1;
+    }
+    header h1 span {
+      font-style: italic;
+      color: var(--rose);
+    }
+    header p {
+      margin-top: 16px;
+      font-weight: 300;
+      color: #7b5c8a;
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin-inline: auto;
+    }
+    .heart-divider {
+      margin: 30px auto 0;
+      font-size: 1.6rem;
+      letter-spacing: 8px;
+    }
+
+    /* VIDEO */
+    .video-section {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .video-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--deep-purple);
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+    .video-wrapper {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(155,89,182,0.25);
+      border: 3px solid rgba(244,167,195,0.5);
+      background: #000;
+    }
+    .video-wrapper iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: block;
+      border: none;
+    }
+
+    /* CARDS */
+    .cards-section {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 50px auto 80px;
+      padding: 0 20px;
+    }
+    .cards-section > h2 {
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      color: var(--deep-purple);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    .cards-section > p {
+      text-align: center;
+      color: #9e7aaf;
+      font-weight: 300;
+      margin-bottom: 40px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(244,167,195,0.45);
+      border-radius: 20px;
+      padding: 30px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+      box-shadow: 0 6px 20px rgba(155,89,182,0.1);
+    }
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(155,89,182,0.25);
+      border-color: var(--rose);
+    }
+    .card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .card .label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--deep-purple);
+      font-weight: 700;
+    }
+    .card .hint {
+      font-size: 0.72rem;
+      color: var(--rose);
+      margin-top: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(80,20,100,0.45);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: linear-gradient(145deg, #fff0f8, #f9eeff);
+      border-radius: 28px;
+      padding: 40px 36px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(100,30,130,0.3);
+      border: 2px solid rgba(244,167,195,0.5);
+      transform: scale(0.85) translateY(30px);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-overlay.active .modal {
+      transform: scale(1) translateY(0);
+    }
+    .modal .modal-icon { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--deep-purple);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .modal p {
+      color: #6b4c82;
+      font-size: 1rem;
+      line-height: 1.75;
+      font-weight: 300;
+      text-align: center;
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      font-size: 1.4rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #c47faa;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--deep-purple); }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 30px;
+      color: #a07ab5;
+      font-size: 0.85rem;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating petals -->
+<div class="petals" id="petals"></div>
+
+<!-- Header -->
+<header>
+  <p class="subtitle">Sana özel bir sayfa</p>
+  <h1>Sevgili <span>Mine</span></h1>
+  <p>Sen sadece bir kardeş değil, en güzel arkadaşımsın. Bu sayfa senin için yapıldı. 🌸</p>
+  <div class="heart-divider">💜 🌸 💜</div>
+</header>
+
+<!-- Video -->
+<section class="video-section">
+  <h2>Sana özel bir video ✨</h2>
+  <div class="video-wrapper">
+    <!-- YouTube video ID'ni buraya yaz: src="https://www.youtube.com/embed/VIDEO_ID" -->
+    <iframe
+      src="https://youtu.be/0gqWZ-rzD-s"
+      title="Mine için özel video"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<!-- Cards -->
+<section class="cards-section">
+  <h2>Seni Sevdiğim 10 Şey 💜</h2>
+  <p>Her kutucuğa tıkla ve ikimizin bir anısını oku 🌷</p>
+  <div class="cards-grid" id="cardsGrid"></div>
+</section>
+
+<footer>Bu sayfa sana olan sevgimle yapıldı 💜</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-icon" id="modalIcon"></div>
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+  </div>
+</div>
+
+<script>
+  // =====================
+  // KART VERİLERİ
+  // Anı metinlerini buradan düzenleyebilirsin!
+  // =====================
+  const cards = [
+    {
+      icon: "🌹",
+      label: "Nazik",
+      memory: "İnsanların seni kırmasına rağmen örneğin ben veya hira yinede karşındakine karşı nazik davrandın."
+    },
+    {
+      icon: "🕊️",
+      label: "Merhametli",
+      memory: "Fuardaki kedileri sevip kolladın."
+    },
+    {
+      icon: "🌟",
+      label: "Fedakâr",
+      memory: "Arkadaşlarınla görüşebilmek için yağmurlu ve soğuk günde bizim için geldin."
+    },
+    {
+      icon: "🌸",
+      label: "Düşünceli",
+      memory: "Bir durumum olduğunda beni herkesten çok düşünen sendin."
+    },
+    {
+      icon: "💎",
+      label: "Temiz Kalpli",
+      memory: "Tüm insanların kötü davranışlarına rağmen saygını bozmadın."
+    },
+    {
+      icon: "🤝",
+      label: "Güvenilir",
+      memory: "İçimi dökebileceğim bir kardeş oldun beni hiç sorgulatmadın."
+    },
+    {
+      icon: "☀️",
+      label: "Neşeli",
+      memory: "Yaşadığın onca şeye rağmen yinede insanları eğlendirdin."
+    },
+    {
+      icon: "💜",
+      label: "Anlayışlı",
+      memory: "Herşeyimi en iyi anlayan sendin."
+    },
+    {
+      icon: "✨",
+      label: "Özel",
+      memory: "Benim için herşeyden özelsin."
+    },
+    {
+      icon: "🦋",
+      label: "Eşsiz",
+      memory: "Senin gibi bir kardeşim daha olmadı olmasında istemem."
+    }
+  ];
+
+  // Kartları oluştur
+  const grid = document.getElementById('cardsGrid');
+  cards.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `<div class="icon">${c.icon}</div><div class="label">${c.label}</div><div class="hint">tıkla ✦</div>`;
+    div.onclick = () => openModal(i);
+    grid.appendChild(div);
+  });
+
+  // Modal
+  function openModal(i) {
+    const c = cards[i];
+    document.getElementById('modalIcon').textContent = c.icon;
+    document.getElementById('modalTitle').textContent = c.label;
+    document.getElementById('modalText').textContent = c.memory;
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+  function closeModalBtn() {
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+  }
+
+  // Floating petals
+  const petalEmojis = ['🌸','🌷','💜','✨','🌺','💕'];
+  const container = document.getElementById('petals');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(p);
+  }
+</script>
+</body>
+</html>
